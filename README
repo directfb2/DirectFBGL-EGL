@@ -1,0 +1,4 @@
+DirectFBGL-EGL
+==============
+
+DirectFBGL-EGL contains DirectFBGL implementation on top of the EGL interface.
