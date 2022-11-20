@@ -1,0 +1,8 @@
+DirectFBGL-EGL is built using Meson and Ninja:
+
+  $ meson build/
+  $ ninja -C build/
+
+Finally, you can install DirectFBGL-EGL using:
+
+  $ ninja -C build/ install

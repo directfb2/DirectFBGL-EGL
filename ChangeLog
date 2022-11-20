@@ -1,0 +1,11 @@
+commit 4be421226d415830b3a6949bf3021d053bc5c536
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sun Nov 20 11:46:34 2022 +0100
+
+    DirectFBGL implementation on top of the EGL interface
+
+commit afd5be8ff4f7e96e891b2d1ec24f03aaf4662552
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sun Nov 20 11:42:08 2022 +0100
+
+    Initial revision
