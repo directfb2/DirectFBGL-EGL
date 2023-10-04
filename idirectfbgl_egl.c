@@ -43,7 +43,7 @@ typedef struct {
      EGLContext eglContext;
 } IDirectFBGL_EGL_data;
 
-static DirectResult
+static DFBResult
 egl_flip_func( void *ctx )
 {
      IDirectFBGL_EGL_data *data = ctx;
@@ -193,6 +193,9 @@ Construct( IDirectFBGL      *thiz,
      IDirectFBSurface_data *surface_data;
      EGLint                 num_config;
      EGLint                 config_attr[]  = { EGL_DEPTH_SIZE,      16,
+                                               EGL_RED_SIZE,        1,
+                                               EGL_GREEN_SIZE,      1,
+                                               EGL_BLUE_SIZE,       1,
                                                EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
                                                EGL_NONE };
      EGLint                 context_attr[] = { EGL_CONTEXT_CLIENT_VERSION, 2,
