@@ -1,3 +1,24 @@
+commit ff8e6c6c82973be10c74cb54c8c4ff0009a094ba
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Wed Oct 4 10:15:36 2023 +0200
+
+    Set a size for the color buffer components when calling eglChooseConfig()
+
+commit 60647ffa27a2d8e336c5909d9f1dfb4313ff71d0
+Merge: afd5be8 52b2a21
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Sun Nov 20 11:47:12 2022 +0100
+
+    Merge pull request #1 from caramelli/master
+    
+    DirectFBGL implementation on top of the EGL interface
+
+commit 52b2a216e1e1d46d80d4ddef964eaea1fdc656b7
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sun Nov 20 11:46:54 2022 +0100
+
+    Add ChangeLog
+
 commit 4be421226d415830b3a6949bf3021d053bc5c536
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Sun Nov 20 11:46:34 2022 +0100
