@@ -35,12 +35,14 @@ DIRECT_INTERFACE_IMPLEMENTATION( IDirectFBGL, EGL )
 /**********************************************************************************************************************/
 
 typedef struct {
-     int        ref;        /* reference counter */
+     int                    ref;        /* reference counter */
 
-     EGLDisplay eglDisplay;
-     EGLConfig  eglConfig;
-     EGLSurface eglSurface;
-     EGLContext eglContext;
+     EGLDisplay             eglDisplay;
+     EGLConfig              eglConfig;
+     EGLSurface             eglSurface;
+     EGLContext             eglContext;
+
+     DFBSurfaceCapabilities caps;
 } IDirectFBGL_EGL_data;
 
 static DFBResult
@@ -176,6 +178,23 @@ IDirectFBGL_EGL_GetProcAddress( IDirectFBGL  *thiz,
      return DFB_OK;
 }
 
+#if DIRECTFBGL_INTERFACE_VERSION > 1
+static DFBResult
+IDirectFBGL_EGL_SwapBuffers( IDirectFBGL *thiz )
+{
+     DIRECT_INTERFACE_GET_DATA( IDirectFBGL_EGL );
+
+     D_DEBUG_AT( DFBGL_EGL, "%s( %p )\n", __FUNCTION__, thiz );
+
+     if (!(data->caps & DSCAPS_GL))
+          return DFB_OK;
+
+     eglSwapBuffers( data->eglDisplay, data->eglSurface );
+
+     return DFB_OK;
+}
+#endif
+
 /**********************************************************************************************************************/
 
 static DFBResult
@@ -237,12 +256,22 @@ Construct( IDirectFBGL      *thiz,
           goto error;
      }
 
-     surface_data = surface->priv;
-     if (!surface_data)
+     ret = surface->GetCapabilities( surface, &data->caps );
+     if (ret) {
+          D_DERROR( ret, "DirectFBGL/EGL: Failed to get surface capabilities!\n" );
           goto error;
+     }
 
-     surface_data->flip_func     = egl_flip_func;
-     surface_data->flip_func_ctx = data;
+     if (!(data->caps & DSCAPS_GL)) {
+          surface_data = surface->priv;
+          if (!surface_data) {
+               ret = DFB_DEAD;
+               goto error;
+          }
+
+          surface_data->flip_func     = egl_flip_func;
+          surface_data->flip_func_ctx = data;
+     }
 
      thiz->AddRef         = IDirectFBGL_EGL_AddRef;
      thiz->Release        = IDirectFBGL_EGL_Release;
@@ -250,6 +279,9 @@ Construct( IDirectFBGL      *thiz,
      thiz->Unlock         = IDirectFBGL_EGL_Unlock;
      thiz->GetAttributes  = IDirectFBGL_EGL_GetAttributes;
      thiz->GetProcAddress = IDirectFBGL_EGL_GetProcAddress;
+#if DIRECTFBGL_INTERFACE_VERSION > 1
+     thiz->SwapBuffers    = IDirectFBGL_EGL_SwapBuffers;
+#endif
 
      return DFB_OK;
 
