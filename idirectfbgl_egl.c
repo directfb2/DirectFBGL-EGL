@@ -217,8 +217,9 @@ Construct( IDirectFBGL      *thiz,
                                                EGL_BLUE_SIZE,       1,
                                                EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
                                                EGL_NONE };
-     EGLint                 context_attr[] = { EGL_CONTEXT_CLIENT_VERSION, 2,
-                                               EGL_NONE };
+     EGLint                 context_attr[3];
+     const char            *value;
+     int                    gles;
 
      DIRECT_ALLOCATE_INTERFACE_DATA( thiz, IDirectFBGL_EGL );
 
@@ -248,6 +249,35 @@ Construct( IDirectFBGL      *thiz,
      if (!data->eglSurface) {
           D_ERROR( "DirectFBGL/EGL: eglCreateWindowSurface() failed: 0x%x!\n", (unsigned int) eglGetError() );
           goto error;
+     }
+
+     if ((value = direct_config_get_value( "gles" ))) {
+          char *error;
+
+          gles = strtoul( value, &error, 10 );
+
+          if (*error) {
+               D_ERROR( "DirectFBGL/EGL: 'gles': Error in value '%s'!\n", error );
+               goto error;
+          }
+
+          if (gles < 0 || gles > 3) {
+               D_ERROR( "DirectFBGL/EGL: 'gles': version %d out of bounds!\n", gles );
+               goto error;
+          }
+     }
+     else
+          gles = 2;
+
+     if (!gles) {
+          context_attr[0] = EGL_NONE;
+
+          eglBindAPI(EGL_OPENGL_API);
+     }
+     else {
+          context_attr[0] = EGL_CONTEXT_CLIENT_VERSION;
+          context_attr[1] = gles;
+          context_attr[2] = EGL_NONE;
      }
 
      data->eglContext = eglCreateContext( data->eglDisplay, data->eglConfig, EGL_NO_CONTEXT, context_attr );
